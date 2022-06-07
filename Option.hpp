@@ -3,21 +3,24 @@
 
 #include <cstdint>
 
-enum Status: uint32_t
+namespace CmdParser
 {
-  GOT_OPTION,
-  GOT_NON_OPTION,
-  MISSING_ARGUMENT,
-  INVALID_OPTION
-};
+  struct OptionSpec
+  {
+    const char *long_opt;
+    char short_opt;
+    bool has_arg;
+  };
 
-struct Option
-{
-  const char *long_opt;
-  char short_opt;
-  bool has_arg;
+  enum Status: uint32_t
+  {
+    GOT_OPTION,
+    GOT_NON_OPTION,
+    MISSING_ARGUMENT,
+    INVALID_OPTION
+  };
 
-  struct Info
+  struct Option
   {
     Status status;
     uint32_t index;
@@ -29,7 +32,7 @@ struct Option
 
   struct Iterator
   {
-    const Option *option_list;
+    const OptionSpec *option_list;
     const char **argv;
 
     uint32_t option_count;
@@ -38,6 +41,7 @@ struct Option
     uint32_t end;
     uint32_t line,
       column;
+
     bool is_done: 1;
     bool should_rotate: 1;
 
@@ -45,12 +49,12 @@ struct Option
       uint32_t start,
       const char **argv,
       uint32_t argc,
-      const Option *option_list,
+      const OptionSpec *option_list,
       uint32_t option_count
       );
 
-    Info advance();
+    Option advance();
   };
-};
+}
 
 #endif // OPTION_HPP

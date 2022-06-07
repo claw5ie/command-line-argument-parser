@@ -15,11 +15,11 @@ const char *is_prefix(const char *prefix, const char *string)
   return *prefix == '\0' ? string : nullptr;
 }
 
-Option::Iterator Option::Iterator::create(
+CmdParser::Iterator CmdParser::Iterator::create(
   uint32_t start,
   const char **argv,
   uint32_t argc,
-  const Option *option_list,
+  const OptionSpec *option_list,
   uint32_t option_count
   )
 {
@@ -36,13 +36,13 @@ Option::Iterator Option::Iterator::create(
   };
 }
 
-Option::Info Option::Iterator::advance()
+CmdParser::Option CmdParser::Iterator::advance()
 {
   if (is_done)
     return { INVALID_OPTION, uint32_t(-1), nullptr, line, 0 };
 
   const char *const arg = argv[line];
-  Info option = { GOT_OPTION, uint32_t(-1), nullptr, line, 0 };
+  Option option = { GOT_OPTION, uint32_t(-1), nullptr, line, 0 };
 
   if (column > 1 || (arg[0] == '-' && std::isalpha(arg[1])))
   {

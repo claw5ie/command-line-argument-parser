@@ -3,14 +3,14 @@
 
 int main(int argc, const char **argv)
 {
-  Option constexpr opt_list[] = {
+  CmdParser::OptionSpec constexpr opt_list[] = {
     { "append", 'a', true },
     { nullptr, 'b', false },
     { "car", '\0', false },
     { nullptr, 'd', false }
   };
 
-  Option::Iterator opt = Option::Iterator::create(
+  CmdParser::Iterator opt = CmdParser::Iterator::create(
     1,
     argv,
     argc,
@@ -21,11 +21,11 @@ int main(int argc, const char **argv)
   while (!opt.is_done)
   {
     uint32_t const error_line = opt.line + opt.argc - opt.end;
-    Option::Info const option = opt.advance();
+    CmdParser::Option const option = opt.advance();
 
     switch (option.status)
     {
-    case GOT_OPTION:
+    case CmdParser::GOT_OPTION:
       std::cout << "option:"
                 << error_line
                 << ": "
@@ -34,14 +34,14 @@ int main(int argc, const char **argv)
                 << (option.argument ? option.argument : "(null)")
                 << '\n';
       break;
-    case GOT_NON_OPTION:
+    case CmdParser::GOT_NON_OPTION:
       std::cout << "non option:"
                 << error_line
                 << ": "
                 << argv[option.line]
                 << '\n';
       break;
-    case MISSING_ARGUMENT:
+    case CmdParser::MISSING_ARGUMENT:
       std::cerr << "ERROR:"
                 << error_line
                 << ':'
@@ -52,7 +52,7 @@ int main(int argc, const char **argv)
                 << option.index
                 << ".\n";
       break;
-    case INVALID_OPTION:
+    case CmdParser::INVALID_OPTION:
       std::cerr << "ERROR:"
                 << error_line
                 << ':'
